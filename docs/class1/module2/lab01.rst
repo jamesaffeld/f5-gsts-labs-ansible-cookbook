@@ -11,11 +11,7 @@ Solution
 
 Use the ``bigip_pool`` module.
 
-#. Create a ``lab2.1`` directory in the ``labs`` directory.
-#. Setup the filesystem layout to mirror the one :doc:`described in lab 1.3</class1/module1/lab03>`.
-#. Add a ``bigip`` host to the ansible inventory and give it an ``ansible_host``
-   fact with the value ``10.1.1.4``
-#. *Type* the following into the ``playbooks/site.yaml`` file.
+#. *Type* the following into the ``playbooks/lab2.1.yaml`` file.
 
  ::
 
@@ -25,15 +21,18 @@ Use the ``bigip_pool`` module.
      hosts: bigip
      connection: local
 
+     vars: 
+       provider: 
+         server: 10.1.1.4
+         user: admin
+         password: admin
+         validate_certs: no
+
      tasks:
        - name: Create web servers pool
          bigip_pool:
            name: web-servers
            lb_method: ratio-member
-           password: admin
-           server: 10.1.1.4
-           user: admin
-           validate_certs: no
 
 Run this playbook, from the ``lab2.1`` directory like so
 

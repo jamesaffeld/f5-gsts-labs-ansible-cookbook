@@ -11,40 +11,35 @@ Solution
 
 Use the ``bigip_user`` module.
 
-#. Create a ``lab2.14`` directory in the ``labs`` directory.
-#. Setup the filesystem layout to mirror the one :doc:`described in lab 1.3</class1/module1/lab03>`.
-#. Add a ``bigip`` host to the ansible inventory and give it an ``ansible_host``
-   fact with the value ``10.1.1.4``
-#. *Type* the following into the ``playbooks/site.yaml`` file.
+#. *Type* the following into the ``playbooks/lab2.14.yaml`` file.
 
   ::
 
    ---
 
-   - name: An example user modification playbook
-     hosts: bigip
-     connection: local
+ - name: change root password
+  hosts: bigip
+  connection: local
 
-     vars:
-       validate_certs: no
-       username: admin
-       password: admin
+  vars: 
+    provider: 
+      server: 10.1.1.4
+      user: admin
+      password: admin
+      validate_certs: no
 
-     tasks:
-       - name: Change root password
-         bigip_user:
-           username_credential: root
-           password_credential: ChangedPassword1234
-           password: "{{ password }}"
-           server: 10.1.1.4
-           validate_certs: "{{ validate_certs }}"
-           user: "{{ username }}"
+  tasks: 
+    - name: change root password
+      bigip_user: 
+        username_credential: root
+        password_credential: ChangedPassword1234
+        provider: "{{ provider }}"
 
-Run this playbook, from the ``lab2.14`` directory like so
+Run this playbook like so
 
   ::
 
-   $ ansible-playbook -i inventory/hosts playbooks/site.yaml
+   $ ansible-playbook -i inventory/hosts playbooks/lab2.14.yaml
 
 Discussion
 ----------

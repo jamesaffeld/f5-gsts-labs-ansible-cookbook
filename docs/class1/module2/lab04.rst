@@ -1,4 +1,4 @@
-Adding nodes to a pool
+﻿Adding nodes to a pool
 ======================
 
 Problem
@@ -11,11 +11,7 @@ Solution
 
 Use the ``bigip_pool_member`` module.
 
-#. Create a ``lab2.4`` directory in the ``labs`` directory.
-#. Setup the filesystem layout to mirror the one :doc:`described in lab 1.3</class1/module1/lab03>`.
-#. Add a ``bigip`` host to the ansible inventory and give it an ``ansible_host``
-   fact with the value ``10.1.1.4``
-#. *Type* the following into the ``playbooks/site.yaml`` file.
+#. Skip this lab - redundant. 
 
  ::
 
@@ -43,7 +39,7 @@ Use the ``bigip_pool_member`` module.
            user: "{{ username }}"
            validate_certs: "{{ validate_certs }}"
 
-Run this playbook, from the ``lab2.4`` directory like so
+Run this playbook like so
 
   ::
 

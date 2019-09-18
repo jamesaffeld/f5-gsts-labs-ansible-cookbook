@@ -12,39 +12,35 @@ Solution
 
 Use variables.
 
-#. Create a ``lab2.2`` directory in the ``labs`` directory.
-#. Setup the filesystem layout to mirror the one :doc:`described in lab 1.3</class1/module1/lab03>`.
-#. Add a ``bigip`` host to the ansible inventory and give it an ``ansible_host``
-   fact with the value ``10.1.1.4``
-#. *Type* the following into the ``playbooks/site.yaml`` file.
+#. *Type* the following into the ``playbooks/lab2.2.yaml`` file.
 
  ::
 
    ---
+- name: an example pool playbook
+  hosts: bigip
+  connection: local
 
-   - name: An example copy playbook
-     hosts: bigip
+  vars:
+    provider:
+      server: 10.1.1.4
+      user: admin
+      password: admin
+      validate_certs: no
+ 
+  tasks:
+     - name: Create node for web servers pool      
+       bigip_node: 
+         name: web-servers_node1
+         address: 10.1.20.11  
+         provider: "{{ provider }}"
+         description: "Created by Ansible"
 
-     vars:
-       validate_certs: no
-       username: admin
-       password: admin
-
-     tasks:
-       - name: Create many pools
-         bigip_pool:
-           name: web-servers
-           lb_method: ratio-member
-           password: "{{ password }}"
-           server: 10.1.1.4
-           user: "{{ username }}"
-           validate_certs: "{{ validate_certs }}"
-
-Run this playbook, from the ``lab2.2`` directory like so
+Run this playbook like so
 
   ::
 
-   $ ansible-playbook -i inventory/hosts playbooks/site.yaml
+   $ ansible-playbook -i inventory/hosts playbooks/lab2.2.yaml
 
 Discussion
 ----------

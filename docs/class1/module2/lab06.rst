@@ -11,11 +11,7 @@ Solution
 
 Use the ``bigip_iapp_template`` module.
 
-#. Change into the ``lab2.6`` directory in the ``labs`` directory.
-#. Setup the filesystem layout to mirror the one :doc:`described in lab 1.3</class1/module1/lab03>`.
-#. Add a ``bigip`` host to the ansible inventory and give it an ``ansible_host``
-   fact with the value ``10.1.1.4``
-#. *Type* the following into the ``playbooks/site.yaml`` file.
+#. iApps are deprecated - skip this lab
 
  ::
 

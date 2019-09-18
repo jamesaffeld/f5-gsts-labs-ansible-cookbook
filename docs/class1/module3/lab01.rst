@@ -11,34 +11,30 @@ Solution
 
 Use the ``vars_prompt`` block in your Playbook.
 
-#. Create a ``lab3.1`` directory in the ``labs`` directory.
-#. Setup the filesystem layout to mirror the one :doc:`described in lab 1.3</class1/module1/lab03>`.
-#. Add a ``bigip`` host to the ansible inventory and give it an ``ansible_host``
-   fact with the value ``10.1.1.4``
-#. *Type* the following into the ``playbooks/site.yaml`` file.
+#. *Type* the following into the ``playbooks/lab3.1.yaml`` file.
 
   ::
 
    ---
 
-   - name: An example prompting playbook
-     hosts: server
+- name: An example prompting playbook
+  hosts: server
 
-     vars_prompt:
-       - name: partition
-         prompt: "Enter a partition name"
-         default: "Common"
+  vars_prompt:
+    - name: partition
+      prompt: "Enter a partition name"
+      default: "Common"
 
-     tasks:
-       - name: Print out your input
-         debug:
-           msg: "You provided the {{ partition }} partition for the 'partition' prompt"
+  tasks:
+    - name: Print out your input
+      debug:
+        msg: "You provided the {{ partition }} partition for the 'partition' prompt"
 
-Run this playbook, from the ``lab3.1`` directory like so
+Run this playbook like so
 
   ::
 
-   $ ansible-playbook -i inventory/hosts playbooks/site.yaml
+   $ ansible-playbook -i inventory/hosts playbooks/lab3.1.yaml
 
 Discussion
 ----------

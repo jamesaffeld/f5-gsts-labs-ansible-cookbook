@@ -1,50 +1,50 @@
-Creating a physical node
+Creating a pool with a physical node
 ========================
 
 Problem
 -------
 
-You need to create a node which you will assign to a pool.
+You need to create a pool with a node.
 
 Solution
 --------
 
 Use the ``bigip_node`` module.
 
-#. Create a ``lab2.3`` directory in the ``labs`` directory.
-#. Setup the filesystem layout to mirror the one :doc:`described in lab 1.3</class1/module1/lab03>`.
-#. Add a ``bigip`` host to the ansible inventory and give it an ``ansible_host``
-   fact with the value ``10.1.1.4``
-#. *Type* the following into the ``playbooks/site.yaml`` file.
+#. *Type* the following into the ``playbooks/lab2.4.yaml`` file.
 
  ::
 
    ---
+- name: an example pool playbook - add nodes
+  hosts: bigip
+  connection: local
 
-   - name: An example virtual server playbook
-     hosts: bigip
-     connection: local
+  vars:
+    provider:
+      server: 10.1.1.4
+      user: admin
+      password: admin
+      validate_certs: no
+ 
+  tasks:
+     - name: add nodes to web servers pool      
+       bigip_pool_member:
+#         host: 10.1.20.11 
+         pool: web-servers
+         aggregate: 
+           - host: 10.1.20.11         
+             port: 80
+         reuse_nodes: yes
 
-     vars:
-       validate_certs: no
-       username: admin
-       password: admin
+         provider: "{{ provider }}"
+         description: "webserver-1 added by Ansible"
 
-     tasks:
-       - name: Create node for physical machine
-         bigip_node:
-           address: 10.1.20.11
-           name: server
-           password: "{{ password }}"
-           server: 10.1.1.4
-           user: "{{ username }}"
-           validate_certs: "{{ validate_certs }}"
-
-Run this playbook, from the ``lab2.3`` directory like so
+Run this playbook like so
 
   ::
 
-   $ ansible-playbook -i inventory/hosts playbooks/site.yaml
+   $ ansible-playbook -i inventory/hosts playbooks/lab2.3.yaml
 
 Discussion
 ----------

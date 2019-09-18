@@ -12,51 +12,43 @@ Solution
 Reboot the device with ``bigip_command``, then use ``bigip_wait`` to wait
 for the device to come back up and be ready to take configuration.
 
-#. Create a ``lab2.13`` directory in the ``labs`` directory.
-#. Setup the filesystem layout to mirror the one :doc:`described in lab 1.3</class1/module1/lab03>`.
-#. Add a ``bigip`` host to the ansible inventory and give it an ``ansible_host``
-   fact with the value ``10.1.1.4``
-#. *Type* the following into the ``playbooks/site.yaml`` file.
+#. *Type* the following into the ``playbooks/lab2.13.yaml`` file.
 
   ::
 
    ---
 
-   - name: An example configuration saving playbook
-     hosts: bigip
-     connection: local
+ - name: an example reboot playbook
+  hosts: bigip
+  connection: local
 
-     vars:
-       validate_certs: no
-       username: admin
-       password: admin
+  vars: 
+    provider: 
+      server: 10.1.1.4
+      user: admin
+      password: admin
+      validate_certs: no
 
-     tasks:
-       - name: Reboot BIG-IP
-         bigip_command:
-           commands: tmsh reboot
-           user: "{{ username }}"
-           password: "{{ password }}"
-           server: 10.1.1.4
-           validate_certs: "{{ validate_certs }}"
-         ignore_errors: true
+  tasks: 
+   - name: Reboot BIG-IP
+     bigip_command: 
+       commands: tmsh reboot
+       provider: "{{ provider }}"
+       #ignore_errors: true
 
-       - name: Wait for shutdown to happen
-         pause:
-           seconds: 90
+   - name: wait for shutdown to happen
+     pause: 
+      seconds: 90
 
-       - name: Wait for BIG-IP to actually be ready
-         bigip_wait:
-           user: "{{ username }}"
-           password: "{{ password }}"
-           server: 10.1.1.4
-           validate_certs: "{{ validate_certs }}"
+   - name: wait for BIG-IP to actually be ready
+     bigip_wait:
+       provider: "{{ provider }}"
 
-Run this playbook, from the ``lab2.13`` directory like so
+Run this playbook like so
 
   ::
 
-   $ ansible-playbook -i inventory/hosts playbooks/site.yaml
+   $ ansible-playbook -i inventory/hosts playbooks/lab2.13.yaml
 
 Discussion
 ----------

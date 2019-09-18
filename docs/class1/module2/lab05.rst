@@ -1,4 +1,4 @@
-Creating a virtual server on BIG-IP
+﻿Creating a virtual server on BIG-IP
 ===================================
 
 Problem
@@ -11,47 +11,42 @@ Solution
 
 Use the ``bigip_virtual_server`` module.
 
-#. Create a ``lab2.5`` directory in the ``labs`` directory.
-#. Setup the filesystem layout to mirror the one :doc:`described in lab 1.3</class1/module1/lab03>`.
-#. Add a ``bigip`` host to the ansible inventory and give it an ``ansible_host``
-   fact with the value ``10.1.1.4``
-#. *Type* the following into the ``playbooks/site.yaml`` file.
+#. *Type* the following into the ``playbooks/lab2.5.yaml`` file.
 
  ::
 
    ---
 
-   - name: An example virtual server playbook
-     hosts: bigip
-     connection: local
+- name: an example pool playbook - create VS 
+  hosts: bigip
+  connection: local
 
-     vars:
-       validate_certs: no
-       username: admin
-       password: admin
+  vars:
+    provider:
+      server: 10.1.1.4
+      user: admin
+      password: admin
+      validate_certs: no
+ 
+  tasks:
+     - name: create VS     
+       bigip_virtual_server:
+         destination: 10.1.1.100
+         pool: web-servers
+         port: 80    
+         name: vip-1
+         snat: Automap
+         profiles:
+           - http
+           - clientssl
+         provider: "{{ provider }}"
+         description: "VS added by Ansible"
 
-     tasks:
-       - name: Create web server VIP
-         bigip_virtual_server:
-           description: webserver-vip
-           destination: 10.1.1.100
-           password: "{{ password }}"
-           name: vip-1
-           pool: web-servers
-           port: 80
-           server: 10.1.1.4
-           snat: Automap
-           user: "{{ username }}"
-           profiles:
-             - http
-             - clientssl
-           validate_certs: "{{ validate_certs }}"
-
-Run this playbook, from the ``lab2.5`` directory like so
+Run this playbook like so
 
   ::
 
-   $ ansible-playbook -i inventory/hosts playbooks/site.yaml
+   $ ansible-playbook -i inventory/hosts playbooks/lab2.5.yaml
 
 Discussion
 ----------

@@ -13,72 +13,46 @@ Use the ``bigip_policy`` module to create a policy with a generic rule.
 Then use the ``bigip_policy_rule`` module to modify the ``actions`` and ``conditions``
 on that rule as needed.
 
-#. Change into the ``lab2.10`` directory in the ``labs`` directory.
-#. Setup the filesystem layout to mirror the one :doc:`described in lab 1.3</class1/module1/lab03>`.
-#. Add a ``bigip`` host to the ansible inventory and give it an ``ansible_host``
-   fact with the value ``10.1.1.4``
-#. *Type* the following into the ``playbooks/site.yaml`` file.
+#. *Type* the following into the ``playbooks/lab2.10.yaml`` file.
 
   ::
 
    ---
+- name: an example LTM policy playbook
+  hosts: bigip
+  connection: local
 
-   - name: An example LTM policy playbook
-     hosts: bigip
-     connection: local
-
-     vars:
+  vars: 
+    provider: 
        validate_certs: no
-       username: admin
+       user: admin
        password: admin
-       policy_name1: my-ltm-policy
+       server: 10.1.1.4
+    policy_name1: my-ltm-policy
 
-     tasks:
-       - name: Provision ASM
-         bigip_provision:
-           module: asm
-           password: "{{ password }}"
-           server: 10.1.1.4
-           validate_certs: "{{ validate_certs }}"
-           user: "{{ username }}"
+  tasks: 
+    - name: create published policy with 1 stubbed rule
+      bigip_policy: 
+        name: "{{ policy_name1 }}"
+        state: present
+        rules: 
+          - rule1
+        provider: "{{ provider }}"
 
-       - name: Create ASM policy
-         bigip_asm_policy:
-           name: foo-policy
-           file: ../files/v2_policy_compact.xml
-           password: "{{ password }}"
-           server: 10.1.1.4
-           validate_certs: "{{ validate_certs }}"
-           user: "{{ username }}"
+    - name: attach ASM policy to LTM policy rule
+      bigip_policy_rule: 
+        policy: "{{ policy_name1 }}"
+        name: rule1
+        actions: 
+          - type: enable
+            asm_policy: foo_policy
+        provider: "{{ provider }}"
 
-       - name: Create published policy with 1 stubbed rule
-         bigip_policy:
-           name: "{{ policy_name1 }}"
-           state: present
-           rules:
-             - rule1
-           password: "{{ password }}"
-           server: 10.1.1.4
-           validate_certs: "{{ validate_certs }}"
-           user: "{{ username }}"
-
-       - name: Attach ASM policy to LTM policy rule
-         bigip_policy_rule:
-           policy: "{{ policy_name1 }}"
-           name: rule1
-           actions:
-             - type: enable
-               asm_policy: foo-policy
-           password: "{{ password }}"
-           server: 10.1.1.4
-           validate_certs: "{{ validate_certs }}"
-           user: "{{ username }}"
-
-Run this playbook, from the ``lab2.10`` directory like so
+Run this playbook like so
 
   ::
 
-   $ ansible-playbook -i inventory/hosts playbooks/site.yaml
+   $ ansible-playbook -i inventory/hosts playbooks/lab2.10.yaml
 
 Discussion
 ----------
